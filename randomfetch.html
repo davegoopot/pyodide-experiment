@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+    Simple HTML page offer a button to load a random number. On pressing the
+    button the page uses Pyodide to fetch a random number using the
+    randomfetch.py module.
+-->
+<html>
+<head>
+    <title>Random Fetch</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
+</head>
+<body>
+    <h1>Random Fetch</h1>
+    <button onclick="loadPyodideAndRun()">Fetch Random Number</button>
+    <p>Random Number: <span id="random_number"></span></p>
+    <script>
+        //Load Pyodide
+        async function main(){
+        let pyodide = await loadPyodide();
+        console.log(pyodide.runPython(`
+            import sys
+            sys.version
+        `));
+        pyodide.runPython("print(1 + 2)");
+      };
+      main();
+        
+    </script>
+</body>
+</html>
