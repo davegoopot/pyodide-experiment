@@ -10,10 +10,17 @@
     <script src="https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js"></script>
 </head>
 <body>
+    <div id="loadingModal" style="display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
+        <div style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%;">
+            <p>Pyodide loading. Please wait...</p>
+        </div>
+    </div>
     <h1>Random Fetch</h1>
-    <button onclick="loadPyodideAndRun()">Fetch Random Number</button>
+    <button onclick="populateRandomNumberSpan();">Fetch Random Number</button>
     <p>Random Number: <span id="random_number"></span></p>
     <script>
+        var pyodide = null;
+        var randomfectch = null;
         async function loadImports(pyodide) {
             await pyodide.loadPackage("requests");
         }
@@ -25,19 +32,35 @@
                 with open("randomfetch.py", "wb") as f:
                     f.write(await response.bytes())
             `)
-            randomfectch = pyodide.pyimport("randomfetch");
+            let randomfectch = pyodide.pyimport("randomfetch");
             return randomfectch;
         }
 
         async function main() {
-            let pyodide = await loadPyodide();
+            // Show the modal
+            document.getElementById('loadingModal').style.display = 'block';
+
+            pyodide = await loadPyodide();
             await loadImports(pyodide);
-            let randomfectch = await loadOurCode(pyodide);
+            randomfectch = await loadOurCode(pyodide);
+
+            // Hide the modal
+            document.getElementById('loadingModal').style.display = 'none';
+
         
-            greeting = randomfectch.helloWorld();
+            let greeting = randomfectch.helloWorld();
             console.log(`Greeting from Python: ${greeting}`);
+
+            let random_number = randomfectch.getRandomNumber();
+            console.log(`Random Number from Python: ${random_number}`);
+
         };
         main();
+
+        function populateRandomNumberSpan() {
+            let random_number = randomfectch.getRandomNumber();
+            document.getElementById("random_number").innerText = random_number;
+        }
         
     </script>
 </body>
