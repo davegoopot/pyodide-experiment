@@ -14,16 +14,20 @@
     <button onclick="loadPyodideAndRun()">Fetch Random Number</button>
     <p>Random Number: <span id="random_number"></span></p>
     <script>
-        //Load Pyodide
         async function main(){
         let pyodide = await loadPyodide();
-        console.log(pyodide.runPython(`
-            import sys
-            sys.version
-        `));
-        pyodide.runPython("print(1 + 2)");
-      };
-      main();
+        await pyodide.loadPackage("requests")
+        await pyodide.runPythonAsync(`
+            from pyodide.http import pyfetch
+            response = await pyfetch("randomfetch.py")
+            with open("randomfetch.py", "wb") as f:
+                f.write(await response.bytes())
+        `)
+        randomfectch = pyodide.pyimport("randomfetch");
+        greeting = randomfectch.helloWorld();
+        console.log(`Greeting from Python: ${greeting}`);
+        };
+        main();
         
     </script>
 </body>

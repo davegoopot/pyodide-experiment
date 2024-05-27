@@ -4,6 +4,12 @@ Code to fetch numbers from random.org
 
 import requests
 
+def helloWorld():
+    """
+        For testing library loading and function calling.
+    """
+    return "Hello World!"
+
 def getRandomNumber():
     """
         Fetch a random number from random.org. The result is a number
