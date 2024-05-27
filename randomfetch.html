@@ -25,7 +25,7 @@
                 with open("randomfetch.py", "wb") as f:
                     f.write(await response.bytes())
             `)
-            randomfectch = pyodide.pyimport("randomfetch");
+            let randomfectch = pyodide.pyimport("randomfetch");
             return randomfectch;
         }
 
@@ -34,7 +34,7 @@
             await loadImports(pyodide);
             let randomfectch = await loadOurCode(pyodide);
         
-            greeting = randomfectch.helloWorld();
+            let greeting = randomfectch.helloWorld();
             console.log(`Greeting from Python: ${greeting}`);
         };
         main();
